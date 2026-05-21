@@ -9,11 +9,11 @@ spring:
       fail-on-unknown-properties: false
     time-zone: UTC
 
-  # PostgreSQL Configuration (Active)
+  # PostgreSQL Configuration (Render-ready)
   datasource:
-    url: jdbc:postgresql://localhost:5432/bookingdb
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/bookingdb}
+    username: ${PG_USER:postgres}
+    password: ${PG_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -85,7 +85,7 @@ spring:
       enabled: false
 
 server:
-  port: 8080
+  port: ${PORT:8080}
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
