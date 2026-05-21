@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: booking-system-api
+    runtime: image
+    repo: https://github.com/SIRAMRULWA/booking-system
+    plan: free
+    envVars:
+      - key: DB_URL
+        value: postgresql://booking_db:5432/bookingdb
+      - key: DB_USERNAME
+        fromDatabase:
+          name: booking-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: booking-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: STRIPE_API_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/booking-system-1.0.0.jar
+
+  - type: postgresql
+    name: booking-db
+    plan: free
