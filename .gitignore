@@ -1,0 +1,9 @@
+﻿/target/
+/.idea/
+*.iml
+*.log
+logs/
+.DS_Store
+Thumbs.db
+application-prod.yml
+.env

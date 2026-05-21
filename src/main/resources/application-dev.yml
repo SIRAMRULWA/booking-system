@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:bookingdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=100,expireAfterWrite=5m
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  h2:
+    console:
+      enabled: true
+  flyway:
+    enabled: false
+
+# Add this to disable Redis health check
+management:
+  health:
+    redis:
+      enabled: false
+
+booking:
+  api:
+    rate-limit: 100
+    cancellation-window-hours: 24
+    max-advance-booking-days: 365
+  pricing:
+    weekend-multiplier: 1.2
+    peak-season-multiplier: 1.5

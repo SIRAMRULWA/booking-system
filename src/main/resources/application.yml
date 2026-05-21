@@ -1,0 +1,213 @@
+spring:
+  application:
+    name: booking-system
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
+    time-zone: UTC
+
+  # PostgreSQL Configuration (Active)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bookingdb
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      max-lifetime: 600000
+      idle-timeout: 300000
+
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+  # Cache Configuration
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=10m,recordStats
+
+  # Email Configuration (Gmail SMTP) - Using environment variables
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:mrulwasihle@gmail.com}
+    password: ${MAIL_PASSWORD:}
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          ssl:
+            trust: smtp.gmail.com
+
+  # Redis Configuration (for distributed rate limiting)
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+  # Flyway (disabled for now)
+  flyway:
+    enabled: false
+
+  # H2 is disabled
+  h2:
+    console:
+      enabled: false
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    connection-timeout: 20000
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%X{requestId}] - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%X{requestId}] - %msg%n"
+  level:
+    com.booking: DEBUG
+    org.springframework.web: INFO
+    org.hibernate: WARN
+    org.hibernate.SQL: DEBUG
+    org.springframework.security: INFO
+  file:
+    name: logs/booking-system.log
+    max-size: 10MB
+    max-history: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,configprops
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: booking-system
+  health:
+    redis:
+      enabled: false
+    mail:
+      enabled: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+    try-it-out-enabled: true
+    filter: true
+
+# CORS Configuration
+cors:
+  allowed-origins: http://localhost:3000,http://localhost:4200,http://localhost:8080
+  allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+  allowed-headers: "*"
+  exposed-headers: X-Request-Id,X-RateLimit-Limit,X-RateLimit-Remaining
+  allow-credentials: true
+  max-age: 3600
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+  expiration: 3600000
+  refresh-expiration: 604800000
+
+# Stripe Payment Configuration - Using environment variables
+stripe:
+  api-key: ${STRIPE_API_KEY:}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+  currency: usd
+
+# Rate Limiting Configuration
+rate-limiting:
+  enabled: true
+  default-limit: 100
+  default-window-seconds: 60
+  redis:
+    enabled: false
+
+# Booking Rules
+booking:
+  api:
+    rate-limit: 100
+    rate-limit-window-seconds: 60
+    cancellation-window-hours: 24
+    max-advance-booking-days: 365
+    min-booking-duration-hours: 1
+    max-booking-duration-hours: 720  # 30 days
+  email:
+    from: ${MAIL_FROM:mrulwasihle@gmail.com}
+    reminders-enabled: true
+    reminder-hours-before: 24
+    reminder-window-minutes: 60
+    reminder-check-delay-ms: 3600000
+  pricing:
+    weekend-multiplier: 1.2
+    peak-season-multiplier: 1.5
+    base-currency: USD
+
+# Swagger Contact Info
+api-info:
+  title: Booking System API
+  description: Generic booking system supporting FLEXIBLE and FIXED modes
+  version: 1.0.0
+  contact:
+    name: Mrulwa Sihle
+    email: mrulwasihle@gmail.com

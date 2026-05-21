@@ -1,0 +1,131 @@
+:root {
+  --bg: #0b1021;
+  --card: #141c33;
+  --text: #edf2ff;
+  --muted: #9db0d5;
+  --accent: #6ea8fe;
+  --danger: #ff6b7a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+  background: linear-gradient(160deg, #0b1021 0%, #101a39 60%, #0d1230 100%);
+  color: var(--text);
+}
+
+.app {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+  align-items: flex-end;
+}
+
+.topbar p {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.topbar-right {
+  display: grid;
+  gap: 6px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: rgba(20, 28, 51, 0.88);
+  border: 1px solid #2b3968;
+  border-radius: 14px;
+  padding: 14px;
+  backdrop-filter: blur(6px);
+}
+
+.card h2 {
+  margin: 4px 0 12px;
+}
+
+.form {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.inline {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+input,
+select,
+textarea,
+button {
+  border-radius: 8px;
+  border: 1px solid #30406f;
+  background: #111b39;
+  color: var(--text);
+  padding: 10px;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+button {
+  background: linear-gradient(180deg, #6ea8fe 0%, #4b7dd6 100%);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  filter: brightness(1.1);
+}
+
+button.ghost {
+  background: transparent;
+  border: 1px solid var(--accent);
+}
+
+button.danger {
+  background: linear-gradient(180deg, #ff8390 0%, #e15264 100%);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.logs {
+  margin-top: 14px;
+}
+
+.output {
+  margin: 0;
+  background: #0a132a;
+  border: 1px solid #223158;
+  border-radius: 10px;
+  padding: 10px;
+  min-height: 120px;
+  max-height: 360px;
+  overflow: auto;
+  color: #b8d3ff;
+}

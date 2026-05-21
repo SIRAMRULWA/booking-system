@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Reminder</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #222; margin: 0; padding: 0;">
+<div style="max-width: 600px; margin: 0 auto; padding: 24px;">
+    <div style="background: #315f8f; color: #fff; padding: 16px; text-align: center;">
+        <h2 style="margin: 0;">Upcoming Booking Reminder</h2>
+    </div>
+    <div style="border: 1px solid #ddd; padding: 20px;">
+        <p>Dear <span th:text="${userName}">Customer</span>,</p>
+        <p>This is a reminder for your upcoming booking.</p>
+        <p><strong>Booking Reference:</strong> <span th:text="${bookingReference}">BKG00000000</span></p>
+        <p><strong>Resource:</strong> <span th:text="${resourceCode}">RESOURCE</span></p>
+        <p><strong>Location:</strong> <span th:text="${location}">Location</span></p>
+        <p><strong>Start Time:</strong> <span th:text="${startTime}">Start</span></p>
+    </div>
+    <p style="text-align: center; font-size: 12px; color: #666;">Booking System</p>
+</div>
+</body>
+</html>

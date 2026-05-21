@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Booking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .welcome-message {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .user-details {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .user-details p {
+            margin: 8px 0;
+        }
+        .role-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            background-color: #667eea;
+            color: white;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+        .social-links {
+            margin-top: 15px;
+        }
+        .social-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🎉 Welcome to Booking System!</h1>
+    </div>
+
+    <div class="content">
+        <div class="welcome-message">
+            Dear <strong th:text="${userName}">User</strong>,
+        </div>
+
+        <p>Thank you for registering with our Booking System! We're excited to have you on board.</p>
+
+        <div class="user-details">
+            <p><strong>📧 Email:</strong> <span th:text="${email}"></span></p>
+            <p><strong>👤 Role:</strong> <span class="role-badge" th:text="${role}">CUSTOMER</span></p>
+        </div>
+
+        <p>You can now:</p>
+        <ul>
+            <li>✅ Browse available resources</li>
+            <li>✅ Create and manage bookings</li>
+            <li>✅ Make secure payments</li>
+            <li>✅ Receive booking confirmations</li>
+        </ul>
+
+        <div style="text-align: center;">
+            <a th:href="${loginUrl}" class="button">Access Your Account</a>
+        </div>
+
+        <p>If you have any questions, feel free to contact our support team.</p>
+
+        <p>Best regards,<br>
+            <strong>Booking System Team</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 Booking System. All rights reserved.</p>
+        <div class="social-links">
+            <a href="#">Twitter</a> |
+            <a href="#">Facebook</a> |
+            <a href="#">LinkedIn</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
