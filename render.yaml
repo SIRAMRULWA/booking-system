@@ -1,4 +1,4 @@
-services:
+﻿services:
   - type: web
     name: booking-system-api
     runtime: image
@@ -6,7 +6,7 @@ services:
     plan: free
     envVars:
       - key: DB_URL
-        value: postgresql://booking_db:5432/bookingdb
+        value: postgresql://booking-db:5432/bookingdb
       - key: DB_USERNAME
         fromDatabase:
           name: booking-db
@@ -18,7 +18,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: MAIL_USERNAME
-        sync: false
+        value: mrulwasihle@gmail.com
       - key: MAIL_PASSWORD
         sync: false
       - key: STRIPE_API_KEY
@@ -28,6 +28,6 @@ services:
     buildCommand: ./mvnw clean package -DskipTests
     startCommand: java -jar target/booking-system-1.0.0.jar
 
-  - type: postgresql
-    name: booking-db
+databases:
+  - name: booking-db
     plan: free
