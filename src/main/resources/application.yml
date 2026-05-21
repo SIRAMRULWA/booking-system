@@ -9,11 +9,11 @@ spring:
       fail-on-unknown-properties: false
     time-zone: UTC
 
-  # PostgreSQL Configuration (Render-ready)
+  # PostgreSQL Configuration – uses environment variables
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/bookingdb}
-    username: ${PG_USER:postgres}
-    password: ${PG_PASSWORD:postgres}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/bookingdb}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -42,7 +42,7 @@ spring:
     caffeine:
       spec: maximumSize=500,expireAfterWrite=10m,recordStats
 
-  # Email Configuration (Gmail SMTP) - Using environment variables
+  # Email Configuration – uses environment variables
   mail:
     host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:587}
@@ -75,11 +75,8 @@ spring:
           max-idle: 8
           min-idle: 0
 
-  # Flyway (disabled for now)
   flyway:
     enabled: false
-
-  # H2 is disabled
   h2:
     console:
       enabled: false
@@ -154,7 +151,6 @@ springdoc:
     try-it-out-enabled: true
     filter: true
 
-# CORS Configuration
 cors:
   allowed-origins: http://localhost:3000,http://localhost:4200,http://localhost:8080
   allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
@@ -163,19 +159,16 @@ cors:
   allow-credentials: true
   max-age: 3600
 
-# JWT Configuration
 jwt:
   secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
   expiration: 3600000
   refresh-expiration: 604800000
 
-# Stripe Payment Configuration - Using environment variables
 stripe:
   api-key: ${STRIPE_API_KEY:}
   webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
   currency: usd
 
-# Rate Limiting Configuration
 rate-limiting:
   enabled: true
   default-limit: 100
@@ -183,7 +176,6 @@ rate-limiting:
   redis:
     enabled: false
 
-# Booking Rules
 booking:
   api:
     rate-limit: 100
@@ -191,7 +183,7 @@ booking:
     cancellation-window-hours: 24
     max-advance-booking-days: 365
     min-booking-duration-hours: 1
-    max-booking-duration-hours: 720  # 30 days
+    max-booking-duration-hours: 720
   email:
     from: ${MAIL_FROM:mrulwasihle@gmail.com}
     reminders-enabled: true
@@ -203,7 +195,6 @@ booking:
     peak-season-multiplier: 1.5
     base-currency: USD
 
-# Swagger Contact Info
 api-info:
   title: Booking System API
   description: Generic booking system supporting FLEXIBLE and FIXED modes
