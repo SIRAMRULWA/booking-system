@@ -42,27 +42,6 @@ spring:
     caffeine:
       spec: maximumSize=500,expireAfterWrite=10m,recordStats
 
-  # Email Configuration – uses environment variables
-  mail:
-    host: ${MAIL_HOST:smtp.gmail.com}
-    port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:mrulwasihle@gmail.com}
-    password: ${MAIL_PASSWORD:}
-    protocol: smtp
-    default-encoding: UTF-8
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
-          ssl:
-            trust: smtp.gmail.com
-
   # Redis Configuration (for distributed rate limiting)
   data:
     redis:
@@ -136,8 +115,8 @@ management:
   health:
     redis:
       enabled: false
-    mail:
-      enabled: true
+    mail:                         # Disable old mail health check (JavaMail is gone)
+      enabled: false
 
 springdoc:
   api-docs:
@@ -202,3 +181,5 @@ api-info:
   contact:
     name: Mrulwa Sihle
     email: mrulwasihle@gmail.com
+
+# SendGrid configuration (no additional YAML needed – just environment variable SENDGRID_API_KEY)
