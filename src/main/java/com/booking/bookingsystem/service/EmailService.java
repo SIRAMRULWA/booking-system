@@ -2,30 +2,38 @@ package com.booking.bookingsystem.service;
 
 import com.booking.bookingsystem.entity.Booking;
 import com.booking.bookingsystem.entity.User;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import java.util.Map;
-import lombok.RequiredArgsConstructor;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-@Service
+import java.io.IOException;
+import java.util.Map;
+
 @Slf4j
-@RequiredArgsConstructor
+@Service
 public class EmailService {
 
-    private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    private final SendGrid sendGrid;
+    private final String fromEmail;
 
-    @Value("${booking.email.from:${spring.mail.username:no-reply@booking.local}}")
-    private String fromEmail;
+    public EmailService(TemplateEngine templateEngine,
+                        @Value("${sendgrid.api-key}") String apiKey,
+                        @Value("${mail.from}") String fromEmail) {
+        this.templateEngine = templateEngine;
+        this.sendGrid = new SendGrid(apiKey);
+        this.fromEmail = fromEmail;
+    }
 
     @Async
     public void sendBookingConfirmation(Booking booking) {
@@ -54,7 +62,6 @@ public class EmailService {
         );
     }
 
-    // NEW METHOD: Send welcome email after registration
     @Async
     public void sendWelcomeEmail(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank()) {
@@ -69,13 +76,13 @@ public class EmailService {
             context.setVariable("userName", user.getFullName());
             context.setVariable("email", user.getEmail());
             context.setVariable("role", user.getRole().name());
-            context.setVariable("loginUrl", "http://localhost:8080/swagger-ui.html");
+            context.setVariable("loginUrl", "https://booking-system-api-b4m0.onrender.com/swagger-ui.html");
 
             String htmlContent = templateEngine.process("welcome-email", context);
             sendEmail(user.getEmail(), "Welcome to Booking System!", htmlContent);
 
             log.info("Welcome email sent successfully to {}", user.getEmail());
-        } catch (MailException | MessagingException ex) {
+        } catch (Exception ex) {
             log.error("Failed to send welcome email to {}: {}", user.getEmail(), ex.getMessage(), ex);
         }
     }
@@ -95,7 +102,7 @@ public class EmailService {
             sendEmail(booking.getUser().getEmail(), subject, htmlContent);
             log.info("{} email sent to {} for booking {}",
                     templateName, booking.getUser().getEmail(), booking.getBookingReference());
-        } catch (MailException | MessagingException ex) {
+        } catch (Exception ex) {
             log.error("Failed to send {} email for booking {}: {}",
                     templateName, booking.getBookingReference(), ex.getMessage(), ex);
         }
@@ -114,13 +121,22 @@ public class EmailService {
         );
     }
 
-    private void sendEmail(String to, String subject, String htmlContent) throws MessagingException {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom(fromEmail);
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(htmlContent, true);
-        mailSender.send(message);
+    private void sendEmail(String to, String subject, String htmlContent) throws IOException {
+        Email from = new Email(fromEmail);
+        Email toEmail = new Email(to);
+        Content content = new Content("text/html", htmlContent);
+        Mail mail = new Mail(from, subject, toEmail, content);
+
+        Request request = new Request();
+        request.setMethod(Method.POST);
+        request.setEndpoint("mail/send");
+        request.setBody(mail.build());
+        Response response = sendGrid.api(request);
+
+        if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+            log.info("Email sent to {} (status: {})", to, response.getStatusCode());
+        } else {
+            log.warn("Email sending returned {}: {}", response.getStatusCode(), response.getBody());
+        }
     }
 }
