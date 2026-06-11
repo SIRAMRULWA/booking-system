@@ -27,6 +27,7 @@ public class EmailService {
     private final SendGrid sendGrid;
     private final String fromEmail;
 
+    // The @RequiredArgsConstructor is removed. We are using constructor injection.
     public EmailService(TemplateEngine templateEngine,
                         @Value("${sendgrid.api-key}") String apiKey,
                         @Value("${mail.from}") String fromEmail) {
